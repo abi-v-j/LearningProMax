@@ -1,11 +1,8 @@
-
-
 # 🚀 React Beginner's Full Guide with Vite - Step by Step
 
-A complete step-by-step tutorial to set up React using Vite, build simple apps, and master React props.
+A complete step-by-step tutorial to set up React using Vite, build simple apps, and master React props, hooks, and routing.
 
 ---
-
 
 ## 📚 Table of Contents
 - [🧩 Phase 1: Prerequisites & Setup](#-phase-1-prerequisites--setup)
@@ -13,6 +10,7 @@ A complete step-by-step tutorial to set up React using Vite, build simple apps, 
 - [🧩 Phase 3: Create Another React App (Counter App)](#-phase-3-create-another-react-app-counter-app)
 - [🧩 Phase 4: React Props Mastery](#-phase-4-react-props-mastery)
 - [🧩 Phase 5: Essential React Hooks Mastery](#-phase-5-essential-react-hooks-mastery)
+- [🧩 Phase 6: React Router Mastery](#-phase-6-react-router-mastery)
 
 ---
 
@@ -2168,3 +2166,552 @@ createRoot(document.getElementById('root')).render(<App />)
 2. Click any hook in the sidebar to see it in action
 3. Experiment with the interactive examples
 4. Understand when and why to use each hook
+
+## 🧩 Phase 6: React Router Mastery
+
+---
+
+## **Step 1: Create Router Project**
+
+```bash
+mkdir ReactRouter
+cd ReactRouter
+npm create vite@latest .
+# Select: React → JavaScript
+npm install
+```
+
+**Install React Router:**
+
+```bash
+npm install react-router-dom
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+---
+
+## **📚 Router Fundamentals**
+
+### **What is React Router?**
+
+- **React Router** is a library for handling client-side routing in React apps
+- Enables **SPA (Single Page Applications)** to navigate without full page reloads
+- Key components: `BrowserRouter`, `Routes`, `Route`, `Link`, `Navigate`
+- Hooks: `useNavigate`, `useParams`, `useLocation`, `useSearchParams`
+
+### **🛠 Basic Setup**
+
+- Wrap app in `BrowserRouter`
+- Define `<Routes>` with `<Route>` children
+- Use `<Link>` for navigation instead of `<a>`
+- `useNavigate()` for programmatic navigation
+
+---
+
+## **Example 1: Basic Routing Setup**
+
+**Create `Home.jsx`:**
+
+```jsx
+import React from 'react'
+
+const Home = () => {
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>🏠 Home Page</h2>
+      <p>Welcome to the React Router demo! Use the links to navigate.</p>
+    </div>
+  )
+}
+
+export default Home
+```
+
+**Create `About.jsx`:**
+
+```jsx
+import React from 'react'
+
+const About = () => {
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>ℹ️ About Page</h2>
+      <p>This is the about section. React Router makes navigation smooth!</p>
+    </div>
+  )
+}
+
+export default About
+```
+
+**Create `Contact.jsx`:**
+
+```jsx
+import React from 'react'
+
+const Contact = () => {
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>📧 Contact Page</h2>
+      <p>Email us at: hello@reactapp.com</p>
+    </div>
+  )
+}
+
+export default Contact
+```
+
+**Update `App.jsx`:**
+
+```jsx
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import Home from './Home'
+import About from './About'
+import Contact from './Contact'
+
+const App = () => {
+  return (
+    <Router>
+      <div style={{ display: 'flex', height: '100vh' }}>
+        {/* Navigation Sidebar */}
+        <nav style={{
+          width: '200px',
+          backgroundColor: '#f8f9fa',
+          padding: '20px',
+          borderRight: '1px solid #dee2e6'
+        }}>
+          <h3>Navigation</h3>
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            <li><Link to="/" style={{ textDecoration: 'none', color: '#007bff', display: 'block', margin: '10px 0' }}>Home</Link></li>
+            <li><Link to="/about" style={{ textDecoration: 'none', color: '#007bff', display: 'block', margin: '10px 0' }}>About</Link></li>
+            <li><Link to="/contact" style={{ textDecoration: 'none', color: '#007bff', display: 'block', margin: '10px 0' }}>Contact</Link></li>
+          </ul>
+        </nav>
+
+        {/* Main Content */}
+        <div style={{ flex: 1, padding: '20px' }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
+  )
+}
+
+export default App
+```
+
+**Update `main.jsx`:**
+
+```jsx
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+
+createRoot(document.getElementById('root')).render(<App />)
+```
+
+**Test:** Run `npm run dev` and click links. URL changes without reload!
+
+---
+
+## **Example 2: useNavigate Hook (Programmatic Navigation)**
+
+**Create `Dashboard.jsx`:**
+
+```jsx
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+const Dashboard = () => {
+  const navigate = useNavigate()
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const handleLogin = () => {
+    setIsLoggedIn(true)
+    navigate('/profile') // Navigate to profile after login
+  }
+
+  const handleLogout = () => {
+    setIsLoggedIn(false)
+    navigate('/') // Go back to home
+  }
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>📊 Dashboard</h2>
+      {isLoggedIn ? (
+        <div>
+          <p>Welcome back! You're logged in.</p>
+          <button onClick={handleLogout} style={{ padding: '10px', background: '#dc3545', color: 'white', border: 'none' }}>Logout</button>
+        </div>
+      ) : (
+        <button onClick={handleLogin} style={{ padding: '10px', background: '#28a745', color: 'white', border: 'none' }}>Login</button>
+      )}
+    </div>
+  )
+}
+
+export default Dashboard
+```
+
+**Update `App.jsx` (add to Routes):**
+
+```jsx
+// ... existing imports
+import Dashboard from './Dashboard'
+
+// In Routes:
+<Route path="/dashboard" element={<Dashboard />} />
+<Route path="/profile" element={<div style={{ padding: '20px' }}><h2>👤 Profile Page</h2><p>Your profile details here.</p></div>} />
+```
+
+**Test:** Navigate to `/dashboard`, click Login – it redirects to `/profile`!
+
+---
+
+## **Example 3: Route Parameters & useParams**
+
+**Create `UserProfile.jsx`:**
+
+```jsx
+import React from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+
+const UserProfile = () => {
+  const { userId } = useParams() // Extract /user/:userId
+  const navigate = useNavigate()
+
+  const userData = {
+    1: { name: 'John Doe', email: 'john@example.com' },
+    2: { name: 'Jane Smith', email: 'jane@example.com' },
+    3: { name: 'Bob Johnson', email: 'bob@example.com' }
+  }
+
+  const user = userData[userId] || { name: 'User Not Found', email: 'N/A' }
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>👤 User Profile</h2>
+      <p>ID: {userId}</p>
+      <p>Name: {user.name}</p>
+      <p>Email: {user.email}</p>
+      <button onClick={() => navigate(-1)} style={{ padding: '10px', background: '#6c757d', color: 'white', border: 'none' }}>Go Back</button>
+    </div>
+  )
+}
+
+export default UserProfile
+```
+
+**Update `App.jsx` (add to Routes):**
+
+```jsx
+// ... existing imports
+import UserProfile from './UserProfile'
+
+// In Routes:
+<Route path="/user/:userId" element={<UserProfile />} />
+```
+
+**Test:** Visit `/user/1` – see user data. Use browser back button or "Go Back".
+
+---
+
+## **Example 4: Nested Routes & Outlet**
+
+**Create `Layout.jsx`:**
+
+```jsx
+import React from 'react'
+import { Outlet, Link } from 'react-router-dom'
+
+const Layout = () => {
+  return (
+    <div>
+      <header style={{ background: '#007bff', color: 'white', padding: '10px' }}>
+        <nav>
+          <Link to="/admin" style={{ color: 'white', marginRight: '20px' }}>Admin Home</Link>
+          <Link to="/admin/users" style={{ color: 'white', marginRight: '20px' }}>Users</Link>
+          <Link to="/admin/settings" style={{ color: 'white' }}>Settings</Link>
+        </nav>
+      </header>
+      <main style={{ display: 'flex' }}>
+        <Outlet /> {/* Renders nested routes */}
+      </main>
+    </div>
+  )
+}
+
+export default Layout
+```
+
+**Create `AdminHome.jsx`:**
+
+```jsx
+import React from 'react'
+
+const AdminHome = () => {
+  return (
+    <div style={{ padding: '20px', flex: 1 }}>
+      <h2>🛡️ Admin Dashboard</h2>
+      <p>Welcome to the admin section.</p>
+    </div>
+  )
+}
+
+export default AdminHome
+```
+
+**Create `Users.jsx`:**
+
+```jsx
+import React from 'react'
+
+const Users = () => {
+  return (
+    <div style={{ padding: '20px', flex: 1 }}>
+      <h2>👥 Users List</h2>
+      <ul>
+        <li>User 1</li>
+        <li>User 2</li>
+        <li>User 3</li>
+      </ul>
+    </div>
+  )
+}
+
+export default Users
+```
+
+**Create `Settings.jsx`:**
+
+```jsx
+import React from 'react'
+
+const Settings = () => {
+  return (
+    <div style={{ padding: '20px', flex: 1 }}>
+      <h2>⚙️ Settings</h2>
+      <p>Configure your admin preferences here.</p>
+    </div>
+  )
+}
+
+export default Settings
+```
+
+**Update `App.jsx` (add nested routes):**
+
+```jsx
+// ... existing imports
+import Layout from './Layout'
+import AdminHome from './AdminHome'
+import Users from './Users'
+import Settings from './Settings'
+
+// In Routes:
+<Route path="/admin" element={<Layout />}>
+  <Route index element={<AdminHome />} /> {/* /admin */}
+  <Route path="users" element={<Users />} /> {/* /admin/users */}
+  <Route path="settings" element={<Settings />} /> {/* /admin/settings */}
+</Route>
+```
+
+**Test:** Visit `/admin` – nested navigation works with shared layout!
+
+---
+
+## **Example 5: Protected Routes & Redirects**
+
+**Create `ProtectedRoute.jsx`:**
+
+```jsx
+import React from 'react'
+import { Navigate, Outlet } from 'react-router-dom'
+
+const fakeAuth = { isAuthenticated: false } // Simulate auth state
+
+const ProtectedRoute = () => {
+  return fakeAuth.isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />
+}
+
+const Login = () => {
+  const navigate = useNavigate() // Wait, import useNavigate in App and pass or use context
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>🔐 Login</h2>
+      <button onClick={() => { fakeAuth.isAuthenticated = true; navigate('/protected') }}>Login</button>
+    </div>
+  )
+}
+
+export default ProtectedRoute
+// Also export Login
+```
+
+**Update `App.jsx` (add protected routes):**
+
+```jsx
+// ... existing imports
+import { useNavigate } from 'react-router-dom'
+import ProtectedRoute, { Login } from './ProtectedRoute' // Adjust export
+
+// In App component, pass navigate if needed, but for simplicity:
+
+// In Routes:
+<Route path="/login" element={<Login />} />
+<Route path="/protected" element={<ProtectedRoute />}>
+  <Route index element={<div style={{ padding: '20px' }}><h2>🔒 Protected Content</h2></div>} />
+</Route>
+```
+
+**Test:** Try `/protected` – redirects to `/login`. Click Login to access!
+
+---
+
+## **Navigation App**
+
+**Create `RouterApp.jsx` (final integrated app):**
+
+```jsx
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams, Outlet } from 'react-router-dom'
+
+// Import all example components from above
+import Home from './Home'
+import About from './About'
+import Contact from './Contact'
+import Dashboard from './Dashboard'
+import UserProfile from './UserProfile'
+import Layout from './Layout'
+import AdminHome from './AdminHome'
+import Users from './Users'
+import Settings from './Settings'
+import Login from './Login' // From protected example
+
+const RouterExamples = () => {
+  const navigate = useNavigate()
+
+  return (
+    <Router>
+      <div style={{ display: 'flex', height: '100vh' }}>
+        {/* Sidebar for Examples */}
+        <nav style={{
+          width: '250px',
+          backgroundColor: '#f8f9fa',
+          padding: '20px',
+          borderRight: '1px solid #dee2e6',
+          overflow: 'auto'
+        }}>
+          <h3>Router Examples</h3>
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            <li><Link to="/basic" style={{ display: 'block', margin: '10px 0', color: '#007bff' }}>1. Basic Routing</Link></li>
+            <li><Link to="/navigate" style={{ display: 'block', margin: '10px 0', color: '#007bff' }}>2. useNavigate</Link></li>
+            <li><Link to="/user/1" style={{ display: 'block', margin: '10px 0', color: '#007bff' }}>3. useParams</Link></li>
+            <li><Link to="/admin" style={{ display: 'block', margin: '10px 0', color: '#007bff' }}>4. Nested Routes</Link></li>
+            <li><button onClick={() => navigate('/login')} style={{ display: 'block', margin: '10px 0', padding: '5px', background: '#28a745', color: 'white', border: 'none' }}>5. Protected</button></li>
+          </ul>
+        </nav>
+
+        {/* Routes for Examples */}
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <Routes>
+            {/* Basic */}
+            <Route path="/basic" element={
+              <div style={{ padding: '20px' }}>
+                <h2>Example 1: Basic Routing</h2>
+                <nav>
+                  <Link to="/">Home</Link> | <Link to="/basic/about">About</Link> | <Link to="/basic/contact">Contact</Link>
+                </nav>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                </Routes>
+              </div>
+            } />
+
+            {/* Navigate */}
+            <Route path="/navigate" element={<Dashboard />} />
+
+            {/* Params */}
+            <Route path="/user/:userId" element={<UserProfile />} />
+
+            {/* Nested */}
+            <Route path="/admin" element={<Layout />}>
+              <Route index element={<AdminHome />} />
+              <Route path="users" element={<Users />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+
+            {/* Protected */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/protected" element={
+              <div style={{ padding: '20px' }}>
+                <h2>Protected Area</h2>
+                <p>Success! You're authenticated.</p>
+              </div>
+            } />
+          </Routes>
+        </div>
+      </div>
+    </Router>
+  )
+}
+
+export default RouterExamples
+```
+
+**Update `App.jsx`:**
+
+```jsx
+import RouterExamples from './RouterExamples'
+
+const App = () => <RouterExamples />
+
+export default App
+```
+
+**Test:** Run `npm run dev` – sidebar navigates between router examples. Experiment with each!
+
+---
+
+## **✅ Phase 6 Complete!**
+
+### **🎯 What You've Learned:**
+
+**5 Essential Router Patterns:**
+
+1. **Basic Routing** – `Routes`, `Route`, `Link`
+2. **useNavigate** – Programmatic navigation
+3. **useParams** – Dynamic route parameters
+4. **Nested Routes** – `Outlet` for layouts
+5. **Protected Routes** – Redirects with `Navigate`
+
+### **🚀 Key Benefits:**
+
+- ✅ **SPA Navigation** – Fast, no reloads
+- ✅ **Dynamic URLs** – Params for unique pages
+- ✅ **Layouts** – Shared UI across routes
+- ✅ **Auth Control** – Protect sensitive areas
+- ✅ **SEO-Friendly** – Works with history API
+
+### **💡 Pro Tips:**
+
+- Use `Link` over `<a>` to prevent full reloads
+- `useNavigate(-1)` for browser back
+- Always provide fallback `<Route path="*" element={<NotFound />} />`
+- Combine with hooks like `useLocation` for state
+- For production, use `HashRouter` if no server config
+
+**Run `npm run dev` and navigate through examples to master React Router!**
